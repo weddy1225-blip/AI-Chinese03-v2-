@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root { --main: #FFB7C5; --bg: #FFFDF9; --accent: #A0D8DE; --text: #5A5A5A; --selected: #FFD54F; }
+    body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: var(--text); }
+    .container { background: white; width: 92%; max-width: 500px; border-radius: 40px; padding: 30px; box-shadow: 0 15px 0 #EADDC3; border: 5px solid #F2E3C9; text-align: center; box-sizing: border-box; }
+    .page { display: none; }
+    .active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .bubble { background: #E0F2F1; border: 4px solid var(--accent); border-radius: 25px; padding: 20px; font-size: 1.3rem; font-weight: bold; line-height: 1.6; margin-bottom: 15px; color: #004D40; }
+    
+    .picker-container { position: relative; width: 90px; height: 90px; margin: 10px auto; border-radius: 50%; border: 6px solid #FFF; box-shadow: 0 8px 20px rgba(0,0,0,0.1); overflow: hidden; }
+    input[type="color"] { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; cursor: pointer; border: none; background: none; }
+    
+    /* 標籤設計 */
+    .sel-section { margin-top: 15px; }
+    .sel-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 8px 0; padding: 10px; background: #FAFAFA; border-radius: 20px; }
+    .group-title { width: 100%; font-size: 0.8rem; color: #999; margin-bottom: 5px; font-weight: bold; }
+    
+    .sel-tag { 
+      background: white; border: 2px solid #EEE; padding: 6px 14px; border-radius: 20px; 
+      font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; user-select: none;
+    }
+    /* 選中狀態 */
+    .sel-tag.selected { 
+      background: var(--selected); border-color: #FFA000; color: #5D4037; font-weight: bold; transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    button { background: var(--main); color: white; border: none; padding: 14px; font-size: 1.3rem; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 0 #E5A4B1; margin-top: 20px; width: 100%; }
+    button:disabled { background: #CCC; box-shadow: 0 4px 0 #AAA; cursor: not-allowed; }
+
+    .feedback-box { text-align: left; background: #FFF9E6; padding: 25px; border-radius: 25px; border-left: 10px solid #FFD97D; font-size: 1.1rem; line-height: 1.8; margin-bottom: 25px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- P1: 首頁 -->
+  <div id="p1" class="page active">
+    <h1 style="color: #FF85A1; margin-bottom: 5px;">🌸 文字調色盤</h1>
+    <p style="font-weight: bold; color: #777;">請先閱讀句子，調出你認為適合的顏色，以及符合意境的標籤</p>
+    <div style="font-size: 5rem; margin: 20px;">🎨</div>
+    <button onclick="startApp()">進入實驗室</button>
+  </div>
+
+  <!-- P2: 遊戲主體 -->
+  <div id="p2" class="page">
+    <div id="qBox" class="bubble">...</div>
+    
+    <div class="picker-container">
+      <input type="color" id="cInput" value="#FFB7C5">
+    </div>
+
+    <div class="sel-section">
+      <div class="sel-group">
+        <div class="group-title">【活力與喜悅】</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🌱 生機</div>
+        <div class="sel-tag" onclick="toggleTag(this)">☀️ 暖洋洋</div>
+        <div class="sel-tag" onclick="toggleTag(this)">✨ 希望</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🦁 勇敢</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🎁 驚喜</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🏃 活力</div>
+      </div>
+
+      <div class="sel-group">
+        <div class="group-title">【平靜與神祕】</div>
+        <div class="sel-tag" onclick="toggleTag(this)">😌 寧靜</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🌙 神祕</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🎯 專注</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🧐 好奇</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🍃 放鬆</div>
+        <div class="sel-tag" onclick="toggleTag(this)">💎 珍貴</div>
+      </div>
+
+      <div class="sel-group">
+        <div class="group-title">【情感與覺察】</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🧡 溫馨</div>
+        <div class="sel-tag" onclick="toggleTag(this)">☁️ 孤單</div>
+        <div class="sel-tag" onclick="toggleTag(this)">💌 想念</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🩹 治癒</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🎈 自由</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🕯️ 懷念</div>
+        <div class="sel-tag" onclick="toggleTag(this)">🌊 遼闊</div>
+      </div>
+    </div>
+
+    <button id="submitBtn" onclick="submitData()">完成調色</button>
+  </div>
+
+  <!-- P3: AI 回饋 -->
+  <div id="p3" class="page">
+    <h2 style="color: var(--main);">🌟 老師的點評</h2>
+    <div id="fBox" class="feedback-box">正在品味你的選色，請稍候...</div>
+    <button onclick="location.reload()">再試一次</button>
+  </div>
+</div>
+
+<script>
+  let curS = "";
+  let selectedTags = [];
+  const questions = [
+    "清晨的露珠躺在嫩葉中央，倒映著整座還沒醒來的森林。",
+    "小螞蟻吃力地搬著一顆砂糖，那是牠準備過冬的甜蜜寶藏。",
+    "沙灘上的貝殼被海浪洗得亮晶晶，裡頭藏著大海說不完的秘密。",
+    "指甲蓋大小的瓢蟲，背著重重的圓形書包，在花瓣階梯上漫步。",
+    "溪水裡的鵝卵石被磨得圓圓滑滑，摸起來就像溫暖的羊毛。",
+    "一陣大雨過後，空氣裡充滿了淡淡的泥土芬芳與青草的氣息。",
+    "星星在夜空中不停地眨眼睛，好像在向地上的我們打招呼。",
+    "害羞的含羞草像個小姑娘，只要你輕輕一碰，她就趕快把葉子收起來躲進夢鄉。",
+    "剛發芽的小草頂著泥土帽子，努力地在大地媽媽的懷抱裡伸懶腰。",
+    "盛開的向日葵像是一輪溫暖的小太陽，每天都跟著太陽公公轉動脖子。",
+    "垂柳舒展著柔軟的長頭髮，在微風中對著小河照鏡子。",
+    "楓葉換上了火紅的衣裳，像一隻隻紅色的蝴蝶從樹上翩翩起舞。",
+    "黃澄澄的油菜花田開滿了山坡，遠遠看去就像一條金色的厚地毯。",
+    "巨大的大王蓮躺在水面上，像是一張綠色的搖籃，等著青蛙王子來午睡。",
+    "森林裡的蘑菇撐開了五顏六色的雨傘，那是森林小精靈專屬的咖啡館。",
+    "枯黃的落葉在大地的懷抱裡沉沉睡去，準備化作明年春天的養分。",
+    "牽牛花在清晨吹起了紫色的喇叭，叫醒了還在賴床的小動物們。",
+    "仙人掌披著一身帶刺的盔甲，像個武小衛兵守護在沙漠裡。",
+    "盛開的蓮花從淤泥裡探出頭來，粉紅的臉蛋上還帶著晶瑩的水珠。",
+    "松果穿著一身硬梆梆的鱗片大衣，躲在松樹頂端看著地上的世界。",
+    "沉甸甸的稻穗垂下了頭，像是在向辛苦耕耘的農夫鞠躬致敬。",
+    "滿山的杜鵑花開得熱鬧極了，好像在山上點燃了一串串粉紅的煙火。",
+    "螢火蟲提著綠色的小燈籠，在漆黑的森林裡舉辦一場神祕的舞會。",
+    "忙碌的蜜蜂在花叢間跳著圓圈舞，一邊收集香噴噴的花粉當午餐。",
+    "蜘蛛在屋簷下織了一張亮晶晶的網，那是牠捕捉夢想的神祕陷阱。",
+    "小松鼠抱著圓滾滾的橡實，靈巧地在樹枝間表演著跳躍雜技。",
+    "剛睡醒的小貓伸了一個大大的懶腰，露出粉紅色的小肉墊。",
+    "池塘裡的紅鯉魚拍打著尾巴，在水底畫出一個又一個神祕的圓圈。",
+    "蝸牛背著沈重的小房子，在長滿青苔的石頭上刻下閃亮的銀色小路。",
+    "蝴蝶張開了斑斕的翅膀，像是一朵會飛的花朵在空中飛舞。",
+    "燕子換上了黑色的西裝，在電線上排隊站好，像是一串跳躍的音符。",
+    "貓頭鷹睜大圓圓的金黃色眼睛，守護著夜晚寂靜的森林。",
+    "小雞像一團黃色的小絨球，圍在母雞身後嘰嘰喳喳地尋寶。",
+    "蟬在炎熱的午後大聲歌唱，好像在比賽誰的嗓門最大。",
+    "蜻蜓像一架輕巧的直升機，靜靜地停在荷花尖尖的頭頂上。",
+    "小狗搖著尾巴，熱情地在門口迎接下班回家的主人。",
+    "胖乎乎的小熊在溪邊抓魚，弄得全身濕答答的，像個巨大的絨毛玩偶。",
+    "太陽公公下班後，害羞地躲進了橘紅色的晚霞雲朵裡。",
+    "烏雲大軍在天空集合，大地瞬間暗了下來，好像要舉辦一場雷電音樂會。",
+    "彩虹橋橫跨在天邊，那是雲朵妹妹用七彩畫筆畫出的美麗風景。",
+    "冬天的白雪像一朵朵輕盈的棉花糖，把整座森林裝點成了銀白世界。",
+    "閃電像一把銀色的寶劍，在黑壓壓的雲層中劃出一道耀眼的光芒。",
+    "藍色的天空中飄著幾朵棉花雲，看起來軟綿綿的，真想咬一口。",
+    "皎潔的月亮像一條銀色的小船，在靜靜的繁星之海中航行。",
+    "狂風像一頭憤怒的小獅子，在大街小巷裡橫衝直撞地大吼大叫。",
+    "太陽光穿過樹葉的縫隙，在大地上灑下一片片金色的碎紙片。",
+    "淡淡的晨霧籠罩著山脈，讓整座山看起來像是披著一層白色的面紗。",
+    "午後的雷陣雨來得快去得也快，留下了滿地的積水和泥土的味道。",
+    "橘紅色的夕陽在大海邊緣跳舞，把波浪都染成了亮閃閃的金黃色。",
+    "灰濛濛的天空落下了細細的小雨，像是在為乾渴的大地洗澡。",
+    "星星像是一顆顆鑲嵌在黑天鵝絨上的寶石，不停地閃爍著光芒。",
+    "涼爽的微風吹過髮梢，溫柔地像媽媽愛撫的小手。",
+    "岸邊的燈塔睜開了明亮的眼睛，為迷失航向的小船指引回家的路。",
+    "巨大的郵輪發出低沉的汽笛聲，載著滿船的冒險夢想緩緩出發。",
+    "海浪像調皮的小孩，一次又一次地拍打著沙灘上的小腳印。",
+    "藍色的大海平靜地像一面鏡子，倒映著天空潔白的雲朵。",
+    "舊舊的木質長椅靜靜地坐在公園角落，訴說著時光流逝的故事。",
+    "紅色的郵筒張大著嘴巴，每天都吞下許多充滿祝福的信件。",
+    "小巷裡的石磚路被雨水刷得發亮，藏著古老城市的記憶。",
+    "彩色的風箏在藍天中飛翔，長長的尾巴在雲端快活地擺動。",
+    "噴泉在廣場中央跳著優雅的舞蹈，陽光把水花照成了晶瑩的珍珠。",
+    "鐵軌向遠方無限延伸，像是一條永遠走不完的鋼鐵小路。",
+    "生鏽的小鐵門推開時，會發出像老人家嘆氣一樣的聲音。",
+    "遊樂場裡的旋轉木馬伴隨著輕快的旋律，載著孩子們的笑聲不停旋轉。",
+    "老時鐘在牆上滴答滴答地走著，每一秒都在提醒我們時間的珍貴。",
+    "圖書館裡安靜得連一根針掉在地上都能聽見，滿屋子都是書本的香味。",
+    "紅磚牆上爬滿了翠綠的藤蔓，像是一面充滿生命力的自然圍牆。"
+  ];
+
+  function toPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function startApp() {
+    curS = questions[Math.floor(Math.random() * questions.length)];
+    document.getElementById('qBox').innerText = curS;
+    toPage('p2');
+  }
+
+  // 標籤選取切換邏輯
+  function toggleTag(el) {
+    const tagName = el.innerText;
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      selectedTags = selectedTags.filter(t => t !== tagName);
+    } else {
+      el.classList.add('selected');
+      selectedTags.push(tagName);
+    }
+  }
+
+  function submitData() {
+    if(selectedTags.length === 0) return alert("請先點選你覺得適合的心情標籤喔！");
+    
+    const color = document.getElementById('cInput').value;
+    const reason = selectedTags.join('、');
+
+    toPage('p3');
+    google.script.run.withSuccessHandler(function(feedback) {
+      document.getElementById('fBox').innerText = feedback;
+    }).getGeminiFeedback(curS, color, reason);
+  }
+</script>
+</body>
+</html>
